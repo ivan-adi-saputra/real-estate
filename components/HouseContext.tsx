@@ -78,7 +78,78 @@ const HouseContextProvider: NextPage<Props> = ({ children }) => {
   }, []);
 
   const handleClick = () => {
-    //
+    // set loading
+    setLoading(true);
+
+    const isDefault = (str: string) => {
+      return str.split(" ").includes("(any)");
+    };
+
+    // get min & max price
+    const minPrice = parseInt(price.split(" ")[0]);
+    const maxPrice = parseInt(price.split(" ")[2]);
+
+    const newHouses = housesData.filter((house) => {
+      const housePrice = parseInt(house.price);
+
+      // filter house
+      if (
+        house.country === country &&
+        house.type === property &&
+        housePrice >= minPrice &&
+        housePrice <= maxPrice
+      ) {
+        return house;
+      }
+
+      // default house
+      if (isDefault(country) && isDefault(property) && isDefault(price)) {
+        return house;
+      }
+
+      // if country is not default
+      if (!isDefault(country) && isDefault(property) && isDefault(price)) {
+        return house.country === country;
+      }
+
+      // if property is not default
+      if (!isDefault(property) && isDefault(country) && isDefault(price)) {
+        return house.type === property;
+      }
+
+      // if price is not default
+      if (!isDefault(price) && isDefault(country) && isDefault(property)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house;
+        }
+      }
+
+      // if country & property is not default
+      if (!isDefault(country) && !isDefault(property) && isDefault(price)) {
+        return house.country === country && house.type === property;
+      }
+
+      // if country & price is not default
+      if (!isDefault(country) && isDefault(property) && !isDefault(price)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house.country === country;
+        }
+      }
+
+      // if price & property is not default
+      if (isDefault(country) && !isDefault(property) && !isDefault(price)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house.type === property;
+        }
+      }
+    });
+
+    setTimeout(() => {
+      return (
+        newHouses.length < 1 ? setHouses([]) : setHouses(newHouses),
+        setLoading(false)
+      );
+    }, 1000);
   };
 
   return (
