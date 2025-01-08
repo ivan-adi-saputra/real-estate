@@ -15,10 +15,7 @@ const Header: NextPage<Props> = ({}) => {
         </Link>
         {/* buttons */}
         <div className="flex items-center gap-6">
-          <Link
-            className="hover:text-violet-900 text-black transition"
-            href={"/"}
-          >
+          <Link className="hover:text-violet-900 transition" href={"/"}>
             Log in
           </Link>
           <Link
